@@ -29,6 +29,7 @@ example.$(O): example.go \
 	$(pkgdir)/gotgo/slice(int).$(O) \
 	$(pkgdir)/gotgo/list(int).$(O) \
 	$(pkgdir)/gotgo/slice(gotgo/list(int).List).$(O) \
+	$(pkgdir)/gotgo/sort(float64).$(O) \
 	test(int).$(O) \
 	test(string).$(O)
 
@@ -45,6 +46,9 @@ $(pkgdir)/gotgo/list(int).go: $(srcpkgdir)/gotgo/list.got
 $(pkgdir)/gotgo/slice(gotgo/list(int).List).go: $(srcpkgdir)/gotgo/slice.got \
 		$(pkgdir)/gotgo/list(int).$(O)
 	gotgo -o "$@" "$<" "gotgo/list(int).List"
+
+$(pkgdir)/gotgo/sort(float64).go: $(srcpkgdir)/gotgo/sort.got
+	gotgo -o "$@" "$<" float64
 
 test(int).go: test.got
 	gotgo -o "$@" "$<" int

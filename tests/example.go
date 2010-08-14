@@ -9,6 +9,7 @@ import (
 	inttest "./test(int)"
 	list "gotgo/list(int)"
 	lists "gotgo/slice(gotgo/list(int).List)"
+	sort "gotgo/sort(float64)"
 )
 
 func main() {
@@ -24,4 +25,8 @@ func main() {
 	ls := []list.List{ *list.Cons(1,nil), *list.Cons(2,nil) }
 	ls = lists.Append(ls, *list.Cons(3,nil))
 	fmt.Println("I like lists: ", ls)
+
+	tosort := []float64{5,4,3,2,1}
+	sort.SortArray(tosort)
+	if sort.AreSorted(tosort) { fmt.Println("The array is sorted!") }
 }
