@@ -32,7 +32,7 @@ func getImports(filename string) (imports map[string]string, names map[string]st
 	if error != nil {
 		return
 	}
-	file, error := parser.ParseFile(filename, source, parser.ImportsOnly)
+	file, error := parser.ParseFile(filename, source, nil, parser.ImportsOnly)
 	if error != nil {
 		return
 	}
@@ -133,7 +133,7 @@ func parseImport(s string) (types []string) {
 	}
 	s = s[start:]
 	// Now we just need to parse the apparent function call...
-	x, _ := parser.ParseExpr(s, s)
+	x, _ := parser.ParseExpr(s, s, nil)
 	callexpr, ok := x.(*ast.CallExpr)
 	if !ok { return } // FIXME: need error handling?
 	for _, texpr := range callexpr.Args {
