@@ -1,3 +1,5 @@
+#!/bin/sh
+
 set -ev
 
 # Let's make sure the generated makefile will actually work...
