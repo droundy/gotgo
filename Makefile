@@ -1,6 +1,8 @@
 # Copyright 2010 David Roundy, roundyd@physics.oregonstate.edu.
 # All rights reserved.
 
+# TODO(ijt): Remove this file
+
 ifndef GOBIN
 GOBIN=$(HOME)/bin
 endif

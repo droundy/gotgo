@@ -8,22 +8,20 @@ based on the idea of template packages.
 Quick start
 -----------
 
-You can compile `gotgo` by just typing
+You can compile `gotgo` by putting this directory under the src/
+of some directory in your GOPATH and typing
 
-    make
+    ./build
 
 and you can run it on an example template file by typing
 
-    ./gotgo pkg/gotgo/slice.got int string
+    ./gotgo/gotgo pkg/gotgo/slice.got int string
 
-You may want to examine the [Makefile][1] to see how to integrate
-`gotgo` into your own build system.  If you just want to see what a
-template package will look like, check out [slice.got][2], which is a
-simple package exporting handy functions for slices, such as Map,
-Fold, Filter, Append, Cat (concat).
+If you want to see what a template package will look like, check out
+[slice.got][1], which is a simple package exporting handy functions for slices,
+such as Map, Fold, Filter, Append, Cat (concat).
 
-[1]: http://github.com/droundy/gotgo/blob/master/Makefile
-[2]: http://github.com/droundy/gotgo/blob/master/gotgo/slice.got
+[1]: http://github.com/droundy/gotgo/blob/master/gotgo/slice.got
 
 The got file
 ============
