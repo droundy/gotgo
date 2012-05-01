@@ -53,7 +53,7 @@ func getTokenFile(filename string) (*token.File, error) {
 	if err != nil {
 		return nil, err
 	}
-	return fileset.AddFile(filename, 0, int(fileInfo.Size())), nil
+	return fileset.AddFile(filename, fileset.Base(), int(fileInfo.Size())), nil
 }
 
 func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e error) {
