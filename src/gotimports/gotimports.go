@@ -7,7 +7,7 @@
 package main
 
 import (
-	stringslice "./slice"
+	stringslice "slice"
 	"bytes"
 	"flag"
 	"fmt"
@@ -146,7 +146,7 @@ func parseImport(s string) (types []string) {
 	}
 	s = s[start:]
 	// Now we just need to parse the apparent function call...
-	x, _ := parser.ParseExpr(s, s)
+	x, _ := parser.ParseExpr(s)
 	callexpr, ok := x.(*ast.CallExpr)
 	if !ok {
 		return
@@ -159,7 +159,7 @@ func parseImport(s string) (types []string) {
 
 func pretty(expr interface{}) string {
 	b := bytes.NewBufferString("")
-	printer.Fprint(b, expr)
+	printer.Fprint(b, nil, expr)
 	// Here we do a hokey trick to make the pretty-printer give paths
 	// without extra spaces.  This is a pretty fragile system, and I
 	// really ought to just implement a special pretty printer of my
