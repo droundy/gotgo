@@ -120,7 +120,7 @@ to the template *must satisfy that interface*! This is valuable
 because it means that you can guarantee that you can't break the
 compile of any client code unless you change the template signature.
 
-If you write a template that require a numeric type, such as
+If you write a template that requires a numeric type, such as
 
     package maxmin(type a int)
     
