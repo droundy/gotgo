@@ -1,7 +1,7 @@
 package main
 
 import (
-	stringslice "slice"
+	"../stringslice"
 	"errors"
 	"flag"
 	"fmt"

@@ -7,7 +7,7 @@
 package main
 
 import (
-	stringslice "slice"
+	"../stringslice"
 	"bytes"
 	"flag"
 	"fmt"
