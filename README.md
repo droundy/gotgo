@@ -8,8 +8,7 @@ based on the idea of template packages.
 Quick start
 -----------
 
-You can compile `gotgo` by putting this directory under the src/
-of some directory in your GOPATH and typing
+You can compile `gotgo` by typing
 
     ./build
 
