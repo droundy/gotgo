@@ -4,7 +4,6 @@
 *~
 gotmake
 bin
-gotimports
 *.got.go
 *.gotit.go
 *.gotit
