@@ -40,7 +40,7 @@ func getImports(filename string) (imports map[string]string, names map[string]st
 	if err != nil {
 		return nil, nil, err
 	}
-	fileset.AddFile(filename, 0, int(fileInfo.Size()))
+	fileset.AddFile(filename, fileset.Base(), int(fileInfo.Size()))
 
 	file, err := parser.ParseFile(fileset, filename, source, parser.ImportsOnly)
 	if err != nil {
