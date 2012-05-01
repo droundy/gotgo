@@ -44,10 +44,13 @@ func main() {
 }
 
 func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e error) {
+	fileset := token.NewFileSet()
+	fileInfo, err := os.Stat(filename)
+	file := fileset.AddFile(filename, 0, int(fileInfo.Size()))
 	x, e := ioutil.ReadFile(filename)
 	if e != nil { return }
 	var scan scanner.Scanner
-	scan.Init(filename, x, nil, 0)
+	scan.Init(file, x, nil, 0)
 	tok := token.COMMA // anything but EOF or PACKAGE
 	for tok != token.EOF && tok != token.PACKAGE {
 		_, tok, _ = scan.Scan()
