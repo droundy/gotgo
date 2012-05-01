@@ -18,7 +18,7 @@ import (
 	"flag"
 	"bytes"
 	"go/printer"
-	stringslice "./gotgo/slice(string)"
+	stringslice "./slice"
 )
 
 var ignoreInstalled = flag.Bool("ignore-installed", true,

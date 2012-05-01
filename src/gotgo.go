@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"go/token"
 	"go/scanner"
-	stringslice "./gotgo/slice(string)"
+	stringslice "./slice"
 )
 
 func dieWith(e string) {
