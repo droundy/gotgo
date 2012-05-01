@@ -14,6 +14,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/printer"
+	"go/token"
 	"io/ioutil"
 	"os"
 	"path"
@@ -32,7 +33,16 @@ func getImports(filename string) (imports map[string]string, names map[string]st
 	if err != nil {
 		return
 	}
-	file, err := parser.ParseFile(filename, source, parser.ImportsOnly)
+
+	// Set up the FileSet.
+	fileset := token.NewFileSet()
+	fileInfo, err := os.Stat(filename)
+	if err != nil {
+		return nil, nil, err
+	}
+	fileset.AddFile(filename, 0, int(fileInfo.Size()))
+
+	file, err := parser.ParseFile(fileset, filename, source, parser.ImportsOnly)
 	if err != nil {
 		return
 	}

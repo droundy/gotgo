@@ -1,7 +1,7 @@
 package main
 
 import (
-	stringslice "./slice"
+	stringslice "slice"
 	"errors"
 	"flag"
 	"fmt"
@@ -47,13 +47,23 @@ func main() {
 	}
 }
 
-func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e error) {
+func getTokenFile(filename string) (*token.File, error) {
 	fileset := token.NewFileSet()
 	fileInfo, err := os.Stat(filename)
-	file := fileset.AddFile(filename, 0, int(fileInfo.Size()))
+	if err != nil {
+		return nil, err
+	}
+	return fileset.AddFile(filename, 0, int(fileInfo.Size())), nil
+}
+
+func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e error) {
+	file, e := getTokenFile(filename)
+	if e != nil {
+		return e
+	}
 	x, e := ioutil.ReadFile(filename)
 	if e != nil {
-		return
+		return e
 	}
 	var scan scanner.Scanner
 	scan.Init(file, x, nil, 0)
@@ -102,7 +112,7 @@ func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e error
 			}
 		}
 	}
-	lastpos := restpos.Offset + 1
+	lastpos := int(restpos) + 1
 	// Now let's write the package file...
 	fmt.Fprintf(out, "package %s\n\n", *pname)
 	for _, imp := range imports {
@@ -112,15 +122,15 @@ func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e error
 	pos, tok, lit := scan.Scan()
 	for tok != token.EOF {
 		if t, ok := vartypes[string(lit)]; ok {
-			fmt.Fprint(out, string(x[lastpos:pos.Offset]))
+			fmt.Fprint(out, string(x[lastpos:pos]))
 			fmt.Fprint(out, t)
-			lastpos = pos.Offset + len(lit)
+			lastpos = int(pos) + len(lit)
 		}
 		newpos, newtok, newlit := scan.Scan()
 		if string(lit) == string(gotpname) && newtok == token.PERIOD {
-			fmt.Fprint(out, string(x[lastpos:pos.Offset]))
+			fmt.Fprint(out, string(x[lastpos:pos]))
 			fmt.Fprint(out, *prefix)
-			lastpos = newpos.Offset + len(newlit)
+			lastpos = int(newpos) + len(newlit)
 			pos, tok, lit = scan.Scan()
 		} else {
 			pos, tok, lit = newpos, newtok, newlit
@@ -168,17 +178,17 @@ func %stestTypes(arg0 %s`, *prefix, vartypes[params[0]])
 	return
 }
 
-func getTypes(s *scanner.Scanner) (params []string, types []string, pos token.Position, error error) {
+func getTypes(s *scanner.Scanner) (params []string, types []string, pos token.Pos, error error) {
 	tok := token.COMMA
-	var lit []byte
+	var lit string
 	for tok == token.COMMA {
 		pos, tok, lit = s.Scan()
 		if tok != token.TYPE {
-			error = errors.New("Expected 'type', not " + string(lit))
+			error = errors.New("Expected 'type', not " + lit)
 			return
 		}
 		var tname string
-		var par []byte
+		var par string
 		pos, tok, par = s.Scan()
 		if tok != token.IDENT {
 			error = errors.New("Identifier expected, not " + string(par))
@@ -195,10 +205,10 @@ func getTypes(s *scanner.Scanner) (params []string, types []string, pos token.Po
 	return
 }
 
-func getType(s *scanner.Scanner) (t string, pos token.Position, tok token.Token, lit []byte) {
+func getType(s *scanner.Scanner) (t string, pos token.Pos, tok token.Token, lit string) {
 	pos, tok, lit = s.Scan()
 	for tok != token.RPAREN && tok != token.COMMA {
-		t += string(lit)
+		t += lit
 		pos, tok, lit = s.Scan()
 	}
 	if t == "" {
