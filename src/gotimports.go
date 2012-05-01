@@ -7,18 +7,18 @@
 package main
 
 import (
-	"os"
-	"fmt"
-	"strings"
-	"io/ioutil"
-	"go/parser"
-	"go/ast"
-	"strconv"
-	"path"
-	"flag"
-	"bytes"
-	"go/printer"
 	stringslice "./slice"
+	"bytes"
+	"flag"
+	"fmt"
+	"go/ast"
+	"go/parser"
+	"go/printer"
+	"io/ioutil"
+	"os"
+	"path"
+	"strconv"
+	"strings"
 )
 
 var ignoreInstalled = flag.Bool("ignore-installed", true,
@@ -27,13 +27,13 @@ var ignoreInstalled = flag.Bool("ignore-installed", true,
 var noGotgo = flag.Bool("without-gotgo", true,
 	"don't require that gotgo be installed")
 
-func getImports(filename string) (imports map[string]string, names map[string]string, error os.Error) {
-	source, error := ioutil.ReadFile(filename)
-	if error != nil {
+func getImports(filename string) (imports map[string]string, names map[string]string, err error) {
+	source, err := ioutil.ReadFile(filename)
+	if err != nil {
 		return
 	}
-	file, error := parser.ParseFile(filename, source, parser.ImportsOnly)
-	if error != nil {
+	file, err := parser.ParseFile(filename, source, parser.ImportsOnly)
+	if err != nil {
 		return
 	}
 	for _, importDecl := range file.Decls {
@@ -52,7 +52,7 @@ func getImports(filename string) (imports map[string]string, names map[string]st
 							nicepath := path.Clean(importPath)
 							imports[nicepath] = importPath
 							//names[path.Join(dir,path.Clean(importSpec.Name.String()))]=importPath
-							names[importSpec.Name.String()]=nicepath
+							names[importSpec.Name.String()] = nicepath
 						}
 					}
 				}
@@ -67,7 +67,7 @@ func handleFile(f string) {
 	if err != nil {
 		fmt.Println("# error: ", err)
 	}
-	for i,ii := range imports {
+	for i, ii := range imports {
 		// fmt.Printf("# %s imports %s\n", f, i)
 		createGofile(i, ii, names)
 	}
@@ -97,9 +97,10 @@ func createGofile(sourcePath, importPath string, names map[string]string) {
 
 var srcpkgdir = `$GOROOT/src/pkg`
 var pkgdir = `$GOROOT/${GOOS}_${GOARCH}`
+
 // path.Join(os.Getenv("GOROOT"),"pkg",os.Getenv("GOOS")+"_"+os.Getenv("GOARCH"))
 var arch = func() string {
-	return map[string]string{"amd64":"6","386":"8","arm":"5"}[os.Getenv("GOARCH")]
+	return map[string]string{"amd64": "6", "386": "8", "arm": "5"}[os.Getenv("GOARCH")]
 }()
 
 func main() {
@@ -123,11 +124,13 @@ func parseImport(s string) (types []string) {
 	// First, I want to cut off any preliminary directories, so the
 	// import should look like a function call.
 	n := strings.Index(s, "(")
-	if n < 1 { return }
+	if n < 1 {
+		return
+	}
 	start := 0
-	for i := n-1; i>=0; i-- {
+	for i := n - 1; i >= 0; i-- {
 		if s[i] == '/' {
-			start = i+1
+			start = i + 1
 			break
 		}
 	}
@@ -135,7 +138,9 @@ func parseImport(s string) (types []string) {
 	// Now we just need to parse the apparent function call...
 	x, _ := parser.ParseExpr(s, s)
 	callexpr, ok := x.(*ast.CallExpr)
-	if !ok { return } // FIXME: need error handling?
+	if !ok {
+		return
+	} // FIXME: need error handling?
 	for _, texpr := range callexpr.Args {
 		types = stringslice.Append(types, pretty(texpr))
 	}
@@ -150,7 +155,7 @@ func pretty(expr interface{}) string {
 	// really ought to just implement a special pretty printer of my
 	// own, since these paths are pretty darn simple.
 	x := b.String()
-	for i := strings.Index(x," / "); i != -1; i = strings.Index(x," / ") {
+	for i := strings.Index(x, " / "); i != -1; i = strings.Index(x, " / ") {
 		x = x[0:i] + "/" + x[i+3:]
 	}
 	return x
@@ -158,5 +163,5 @@ func pretty(expr interface{}) string {
 
 func fileexists(f string) bool {
 	x, err := os.Stat(f)
-	return err == nil && x.IsRegular()
+	return err == nil && !x.IsDir()
 }

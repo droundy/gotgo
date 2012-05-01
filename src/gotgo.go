@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"os"
 	"fmt"
 	"flag"
@@ -30,19 +31,19 @@ func main() {
 	if flag.Args()[0][len(flag.Args()[0])-4:] != ".got" {
 		dieWith("the argument should end with .got")
 	}
-	var e os.Error
+	var e error
 	outf := os.Stdout
 	if *outname != "GONAME" {
 		dir,_ := path.Split(*outname)
 		os.MkdirAll(dir, 0777)
-		outf, e = os.Open(*outname, os.O_WRONLY+os.O_CREAT+os.O_TRUNC,0666)
-		if e != nil { dieWith(e.String()) }
+		outf, e = os.OpenFile(*outname, os.O_WRONLY+os.O_CREATE+os.O_TRUNC,0666)
+		if e != nil { dieWith(e.Error()) }
 	}
 	e = writeGotGotgo(flag.Args()[0], outf, flag.Args()[1:])
-	if e != nil { dieWith(e.String()) }
+	if e != nil { dieWith(e.Error()) }
 }
 
-func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e os.Error) {
+func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e error) {
 	x, e := ioutil.ReadFile(filename)
 	if e != nil { return }
 	var scan scanner.Scanner
@@ -51,10 +52,10 @@ func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e os.Er
 	for tok != token.EOF && tok != token.PACKAGE {
 		_, tok, _ = scan.Scan()
 	}
-	if tok == token.EOF { return os.NewError("Unexpected EOF...") }
+	if tok == token.EOF { return errors.New("Unexpected EOF...") }
 	_, tok, gotpname := scan.Scan()
 	if tok != token.IDENT {
-		return os.NewError("Expected package ident, not "+string(gotpname))
+		return errors.New("Expected package ident, not "+string(gotpname))
 	}
 	if *pname == "NAME" {
 		*pname = string(gotpname)
@@ -64,7 +65,7 @@ func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e os.Er
 	}
 	_, tok, lit := scan.Scan()
 	if tok != token.LPAREN {
-		return os.NewError("Expected (, not "+string(lit))
+		return errors.New("Expected (, not "+string(lit))
 	}
 	params, types, restpos, e := getTypes(&scan)
 	if e != nil { return }
@@ -149,20 +150,20 @@ func %stestTypes(arg0 %s`, *prefix, vartypes[params[0]])
 }
 
 
-func getTypes(s *scanner.Scanner) (params []string, types []string, pos token.Position, error os.Error) {
+func getTypes(s *scanner.Scanner) (params []string, types []string, pos token.Position, error error) {
 	tok := token.COMMA
 	var lit []byte
 	for tok == token.COMMA {
 		pos, tok,lit = s.Scan()
 		if tok != token.TYPE {
-			error = os.NewError("Expected 'type', not "+string(lit))
+			error = errors.New("Expected 'type', not "+string(lit))
 			return
 		}
 		var tname string
 		var par []byte
 		pos, tok,par = s.Scan()
 		if tok != token.IDENT {
-			error = os.NewError("Identifier expected, not "+string(par))
+			error = errors.New("Identifier expected, not "+string(par))
 			return
 		}
 		tname,pos,tok,lit = getType(s)
@@ -170,7 +171,7 @@ func getTypes(s *scanner.Scanner) (params []string, types []string, pos token.Po
 		types = stringslice.Append(types, string(tname))
 	}
 	if tok != token.RPAREN {
-		error = os.NewError(fmt.Sprintf("inappropriate token %v with lit: %s",
+		error = errors.New(fmt.Sprintf("inappropriate token %v with lit: %s",
 			tok, lit))
 	}
 	return
