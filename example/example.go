@@ -4,12 +4,11 @@ package main
 
 import (
 	"fmt"
-	ints "gotgo/slice(int)"
-	stringtest "./test(string)"
-	inttest "./test(int)"
-	list "gotgo/list(int)"
-	lists "gotgo/slice(gotgo/list(int).List)"
-	sort "gotgo/sort(float64)"
+	ints "./slice_int"
+	stringtest "./test_string"
+	inttest "./test_int"
+	list "./list_int"
+	sort "./sort_float64"
 )
 
 func main() {
@@ -20,10 +19,9 @@ func main() {
 	// Doesn't the following give you nightmares of lisp?
 	fmt.Println(list.Cdr(list.Cons(1,list.Cons(2,list.Cons(3,nil)))))
 
-	ints.Map(func (a int) int { return a*2 }, is)
+	ints.Map1(func (a int) int { return a*2 }, is)
 	fmt.Println("is are now doubled: ", is)
 	ls := []list.List{ *list.Cons(1,nil), *list.Cons(2,nil) }
-	ls = lists.Append(ls, *list.Cons(3,nil))
 	fmt.Println("I like lists: ", ls)
 
 	tosort := []float64{5,4,3,2,1}

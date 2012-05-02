@@ -2,7 +2,7 @@
 
 set -e
 
-for dir in stringslice gotgo gotimports; do
+for dir in gotgo gotimports; do
 	(cd $dir && go build)
 done
 
