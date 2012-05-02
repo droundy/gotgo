@@ -121,15 +121,15 @@ func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e error
 	pos, tok, lit := scan.Scan()
 	for tok != token.EOF {
 		if t, ok := vartypes[string(lit)]; ok {
-			fmt.Fprint(out, string(x[lastpos:int(pos) - len(lit)]))
+			fmt.Fprint(out, string(x[lastpos:int(pos) - 1]))
 			fmt.Fprint(out, t)
-			lastpos = int(pos)
+			lastpos = int(pos) - 1 + len(lit)
 		}
 		newpos, newtok, newlit := scan.Scan()
 		if string(lit) == string(gotpname) && newtok == token.PERIOD {
-			fmt.Fprint(out, string(x[lastpos:int(newpos) - len(newlit)]))
+			fmt.Fprint(out, string(x[lastpos:int(newpos) - 1]))
 			fmt.Fprint(out, *prefix)
-			lastpos = int(newpos)
+			lastpos = int(newpos) - 1
 			pos, tok, lit = scan.Scan()
 		} else {
 			pos, tok, lit = newpos, newtok, newlit
