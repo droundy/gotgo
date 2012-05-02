@@ -1,6 +1,4 @@
-package slice
-
-
+package stringslice
 
 // Here we have some utility slice routines
 
