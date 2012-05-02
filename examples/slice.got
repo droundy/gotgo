@@ -4,7 +4,7 @@ package slice(type a, type b a)
 
 // Map1 provides an in-place map, meaning it modifies its input slice.
 // If you still want that data, use the Map function.
-func slice.Map1(f func(a) a, slice []a) {
+func Map1(f func(a) a, slice []a) {
 	for i,v := range slice {
 		slice[i] = f(v)
 	}
@@ -13,7 +13,7 @@ func slice.Map1(f func(a) a, slice []a) {
 // Map provides an out-of-place map, meaning it does not modify its
 // input slice.  It therefore has the advantage that you can Map from
 // one type of slice to another.
-func slice.Map(f func(a) b, slice []a) []b {
+func Map(f func(a) b, slice []a) []b {
 	out := make([]b, len(slice))
 	for i,v := range slice {
 		out[i] = f(v)
@@ -21,7 +21,7 @@ func slice.Map(f func(a) b, slice []a) []b {
 	return out
 }
 
-func slice.Fold(f func(b, a) b, x b, slice []a) b {
+func Fold(f func(b, a) b, x b, slice []a) b {
   for _, v := range slice {
     x = f(x, v)
   }
@@ -30,7 +30,7 @@ func slice.Fold(f func(b, a) b, x b, slice []a) b {
 
 // Filter returns a slice containing only those elements for which the
 // predicate function returns true.
-func slice.Filter(f func(a) bool, slice []a) []a {
+func Filter(f func(a) bool, slice []a) []a {
 	out := make ([]a, 0, len(slice))
 	i := 0
 	for _,v := range slice {
@@ -45,7 +45,7 @@ func slice.Filter(f func(a) bool, slice []a) []a {
 
 // Append appends an element to a slice, in-place if possible, and
 // expanding if needed.
-func slice.Append(slice []a, val a) []a {
+func Append(slice []a, val a) []a {
 	length := len(slice)
 	if cap(slice) == length {
 		// we need to expand
@@ -60,19 +60,19 @@ func slice.Append(slice []a, val a) []a {
 	return slice
 }
 
-func slice.Repeat(val a, n int) []a {
+func Repeat(val a, n int) []a {
 	out := make([]a, n)
 	for i,_ := range out { out[i] = val }
 	return out
 }
 
 // Cat concatenates two slices, expanding if needed.
-func slice.Cat(slices ...[]a) []a {
-	return slice.Cats(slices)
+func Cat(slices ...[]a) []a {
+	return Cats(slices)
 }
 
 // Cats concatenates several slices, expanding if needed.
-func slice.Cats(slices [][]a) []a {
+func Cats(slices [][]a) []a {
 	lentot := 0
 	for _,sl := range slices {
 		lentot += len(sl)
@@ -88,7 +88,7 @@ func slice.Cats(slices [][]a) []a {
 	return out
 }
 
-func slice.Reverse(slice []a) (out []a) {
+func Reverse(slice []a) (out []a) {
 	ln := len(slice)
 	out = make([]a, ln)
 	for i,v:= range slice {
@@ -97,7 +97,7 @@ func slice.Reverse(slice []a) (out []a) {
 	return
 }
 
-func slice.Any(f func(a) bool, slice []a) bool {
+func Any(f func(a) bool, slice []a) bool {
 	for _,v:= range slice {
 		if f(v) { return true }
 	}
