@@ -16,6 +16,12 @@ and you can run it on an example template file by typing
 
     ./gotgo/gotgo pkg/gotgo/slice.got int string
 
+A complete example is in the example/ subdirectory.
+
+    cd example
+    ./build
+    ./example
+
 If you want to see what a template package will look like, check out
 [slice.got][1], which is a simple package exporting handy functions for slices,
 such as Map, Fold, Filter, Append, Cat (concat).
