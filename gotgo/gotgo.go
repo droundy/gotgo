@@ -1,7 +1,6 @@
 package main
 
 import (
-	"../stringslice"
 	"errors"
 	"flag"
 	"fmt"
@@ -98,7 +97,7 @@ func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e error
 		if i < len(actualtypes) {
 			if dot := strings.LastIndex(actualtypes[i], "."); dot != -1 {
 				// We've got to add an import!
-				imports = stringslice.Append(imports,
+				imports = append(imports,
 					"import "+params[i]+` "`+actualtypes[i][0:dot]+`"`)
 				vartypes[params[i]] = params[i] + actualtypes[i][dot:]
 			} else {
@@ -195,8 +194,8 @@ func getTypes(s *scanner.Scanner) (params []string, types []string, pos token.Po
 			return
 		}
 		tname, pos, tok, lit = getType(s)
-		params = stringslice.Append(params, string(par))
-		types = stringslice.Append(types, string(tname))
+		params = append(params, string(par))
+		types = append(types, string(tname))
 	}
 	if tok != token.RPAREN {
 		error = errors.New(fmt.Sprintf("inappropriate token %v with lit: %s",

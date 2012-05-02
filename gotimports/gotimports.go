@@ -7,7 +7,6 @@
 package main
 
 import (
-	"../stringslice"
 	"bytes"
 	"flag"
 	"fmt"
@@ -152,7 +151,7 @@ func parseImport(s string) (types []string) {
 		return
 	} // FIXME: need error handling?
 	for _, texpr := range callexpr.Args {
-		types = stringslice.Append(types, pretty(texpr))
+		types = append(types, pretty(texpr))
 	}
 	return types
 }
