@@ -115,7 +115,6 @@ var arch = func() string {
 func main() {
 	flag.Parse()
 	if len(flag.Args()) != 1 {
-		fmt.Println(flag.Args())
 		dieWith("gotimports requires just one argument: a .go file")
 	}
 	handleFile(flag.Args()[0])

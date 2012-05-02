@@ -24,7 +24,6 @@ var outname = flag.String("o", "GONAME", "name of output file")
 func main() {
 	flag.Parse()
 	if len(flag.Args()) < 1 {
-		fmt.Println(flag.Args())
 		dieWith("gotgo requires at least one argument: the .got file")
 	}
 	if flag.Args()[0][len(flag.Args()[0])-4:] != ".got" {
