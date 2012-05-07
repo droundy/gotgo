@@ -1,7 +1,6 @@
 package main
 
 import (
-	"../stringslice"
 	"errors"
 	"flag"
 	"fmt"
@@ -25,7 +24,6 @@ var outname = flag.String("o", "GONAME", "name of output file")
 func main() {
 	flag.Parse()
 	if len(flag.Args()) < 1 {
-		fmt.Println(flag.Args())
 		dieWith("gotgo requires at least one argument: the .got file")
 	}
 	if flag.Args()[0][len(flag.Args()[0])-4:] != ".got" {
@@ -98,7 +96,7 @@ func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e error
 		if i < len(actualtypes) {
 			if dot := strings.LastIndex(actualtypes[i], "."); dot != -1 {
 				// We've got to add an import!
-				imports = stringslice.Append(imports,
+				imports = append(imports,
 					"import "+params[i]+` "`+actualtypes[i][0:dot]+`"`)
 				vartypes[params[i]] = params[i] + actualtypes[i][dot:]
 			} else {
@@ -119,18 +117,19 @@ func writeGotGotgo(filename string, out *os.File, actualtypes []string) (e error
 		// These are extra imports for data types...
 		fmt.Fprintf(out, "%s\n", imp)
 	}
+
 	pos, tok, lit := scan.Scan()
 	for tok != token.EOF {
 		if t, ok := vartypes[string(lit)]; ok {
-			fmt.Fprint(out, string(x[lastpos:pos]))
+			fmt.Fprint(out, string(x[lastpos:int(pos) - 1]))
 			fmt.Fprint(out, t)
-			lastpos = int(pos) + len(lit)
+			lastpos = int(pos) - 1 + len(lit)
 		}
 		newpos, newtok, newlit := scan.Scan()
 		if string(lit) == string(gotpname) && newtok == token.PERIOD {
-			fmt.Fprint(out, string(x[lastpos:pos]))
+			fmt.Fprint(out, string(x[lastpos:int(newpos) - 1]))
 			fmt.Fprint(out, *prefix)
-			lastpos = int(newpos) + len(newlit)
+			lastpos = int(newpos) - 1
 			pos, tok, lit = scan.Scan()
 		} else {
 			pos, tok, lit = newpos, newtok, newlit
@@ -195,8 +194,8 @@ func getTypes(s *scanner.Scanner) (params []string, types []string, pos token.Po
 			return
 		}
 		tname, pos, tok, lit = getType(s)
-		params = stringslice.Append(params, string(par))
-		types = stringslice.Append(types, string(tname))
+		params = append(params, string(par))
+		types = append(types, string(tname))
 	}
 	if tok != token.RPAREN {
 		error = errors.New(fmt.Sprintf("inappropriate token %v with lit: %s",

@@ -7,7 +7,6 @@
 package main
 
 import (
-	"../stringslice"
 	"bytes"
 	"flag"
 	"fmt"
@@ -116,7 +115,6 @@ var arch = func() string {
 func main() {
 	flag.Parse()
 	if len(flag.Args()) != 1 {
-		fmt.Println(flag.Args())
 		dieWith("gotimports requires just one argument: a .go file")
 	}
 	handleFile(flag.Args()[0])
@@ -152,7 +150,7 @@ func parseImport(s string) (types []string) {
 		return
 	} // FIXME: need error handling?
 	for _, texpr := range callexpr.Args {
-		types = stringslice.Append(types, pretty(texpr))
+		types = append(types, pretty(texpr))
 	}
 	return types
 }
