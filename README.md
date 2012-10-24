@@ -26,7 +26,7 @@ If you want to see what a template package will look like, check out
 [slice.got][1], which is a simple package exporting handy functions for slices,
 such as Map, Fold, Filter, Append, Cat (concat).
 
-[1]: http://github.com/droundy/gotgo/blob/master/gotgo/slice.got
+[1]: https://github.com/droundy/gotgo/blob/master/example/slice.got
 
 The got file
 ============
